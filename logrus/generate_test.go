@@ -1,7 +1,6 @@
 package logrus
 
 import (
-	"fmt"
 	"testing"
 
 	"goa.design/goa/v3/codegen"
@@ -33,8 +32,8 @@ func TestGenerate(t *testing.T) {
 	g, err := Generate("my.pkg/myuser/myproject", nil, files)
 
 	for _, j := range g {
-		fmt.Println(*j)
+		debugf("%s", j.Path)
 	}
 
-	fmt.Printf("Result: %v, %v", g, err)
+	debugf("Result: %v, %v", g, err)
 }

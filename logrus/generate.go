@@ -1,8 +1,6 @@
 package logrus
 
 import (
-	"fmt"
-
 	"goa.design/goa/v3/codegen"
 	"goa.design/goa/v3/eval"
 )
@@ -12,7 +10,8 @@ const (
 	cmd          = "example"
 	importLogrus = "github.com/sirupsen/logrus"
 
-	logrusTemplate = `        {{ comment "Setup logrus logger." }}
+	logrusTemplate = `
+        {{ comment "Setup logrus logger." }}
   var (
 		logger *log.Logger
 	)
@@ -30,19 +29,19 @@ var (
 )
 
 func init() {
-	fmt.Println("[Init]")
+	debugf("Init")
 	codegen.RegisterPlugin(name, cmd, nil, Generate)
 }
 
 func Generate(genpkg string, roots []eval.Root, files []*codegen.File) ([]*codegen.File, error) {
 
-	fmt.Printf("[Genpkg] %s", genpkg)
+	debugf("Genpkg %s", genpkg)
 
 	for _, f := range files {
-		fmt.Printf("[File] %s\n", f.Path)
+		debugf("File %s", f.Path)
 
 		for _, a := range f.SectionTemplates {
-			fmt.Printf("  [SectionTemplate] %s\n", a.Name)
+			debugf("  SectionTemplate %s", a.Name)
 
 			if sf, ok := sectionsFunc[a.Name]; ok {
 				sf(f, a)
@@ -54,9 +53,6 @@ func Generate(genpkg string, roots []eval.Root, files []*codegen.File) ([]*codeg
 }
 
 func serverMainLog(f *codegen.File, t *codegen.SectionTemplate) {
-	fmt.Printf("Called %s \n", t.Name)
-	fmt.Printf("Source:\n%s\n", t.Source)
-	fmt.Printf("Data:%v\n", t.Data)
 	codegen.AddImport(f.SectionTemplates[0], &codegen.ImportSpec{Path: importLogrus})
 	t.Source = logrusTemplate
 }
