@@ -1,4 +1,9 @@
 
+
 .PHONY: test
-test:
-	go test -v --tags debug ./logrus
+test: fmt
+	go test -v ./logrus
+
+.PHONY: fmt
+fmt:
+	go fmt ./...

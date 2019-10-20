@@ -1,16 +1,14 @@
 package logrus
 
 import (
+	"strings"
 	"testing"
 
 	"goa.design/goa/v3/codegen"
 )
 
-func TestGenerate(t *testing.T) {
-
-	t.Logf("Testing")
-
-	files := []*codegen.File{
+var (
+	files = []*codegen.File{
 		{
 			Path: "/mypath",
 			SectionTemplates: []*codegen.SectionTemplate{
@@ -28,12 +26,35 @@ func TestGenerate(t *testing.T) {
 			},
 		},
 	}
+)
+
+func TestGenerate(t *testing.T) {
 
 	g, err := Generate("my.pkg/myuser/myproject", nil, files)
 
-	for _, j := range g {
-		debugf("%s", j.Path)
+	if err != nil {
+		t.Fatalf("unexpected error %v", err)
 	}
 
-	debugf("Result: %v, %v", g, err)
+	var mainFile *codegen.File
+	for _, f := range g {
+		if f.Path == "/mypath" {
+			mainFile = f
+			break
+		}
+	}
+
+	if mainFile == nil || len(mainFile.SectionTemplates) < 1 {
+		t.Fatalf("no section templates found")
+	}
+
+	st := mainFile.Section(sectionTemplateServerMainLogger)
+	if len(st) < 1 {
+		t.Fatalf("no section template %s found", sectionTemplateServerMainLogger)
+	}
+
+	if !strings.Contains(st[0].Source, "logrus") {
+		t.Fatalf("source not containing logrus")
+	}
+
 }
