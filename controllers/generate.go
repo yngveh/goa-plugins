@@ -1,4 +1,4 @@
-package logrus
+package controllers
 
 import (
 	"os"
