@@ -28,3 +28,20 @@ import (
 var _ = API(........
 ``` 
 
+## controllers plugin
+This plugin puts controller files into the directory controllers instead of project root when doing goa example generating
+
+To active the logrus plugin add the following to the design go file
+```go
+package design
+
+import (
+    // Activate controllers plugin 
+    _ "github.com/yngveh/goa-plugins/controllers"
+    . "goa.design/goa/v3/dsl"
+)
+
+var _ = API(........
+``` 
+
+
